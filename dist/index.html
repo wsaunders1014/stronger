@@ -7,41 +7,47 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-	<div id="wrapper">
+	<div id="wrapper" class="clear">
 		<div class="left-side">
 			<div id="instruct">
-				<H2>SHARE YOUR STORY OF INSPIRATION</H2>
-				<p>Inspired by Jeff Bauman and in celebration of human strength and resilience, create your own personal video or photo using Stronger's STRENGTH DEFINES US filter. Share with the world your own story of beating the odds and persevering through life's challenges.</p>
-				<div class="quote">"To be inspired is great, but to inspire is an honor."<br/>- Stacey T. Hunt</div>
-				
-				<form id="video-upload" action="/upload" method="post" enctype="multipart/form-data">
-					<label id="create-btn" for="video">CREATE
-						<input type="file" name="video" id="fileupload"/>
-						<br/><progress></progress>
-					</label>
-				</form>
-			</div>
-			<div id="share"">
-				<div id="facebook-btn"><img src="img/facebook-btn.jpg" alt="Share on Facebook"></div>
-				<div id="twitter-btn"><img src="img/twitter-btn.jpg" alt="Share on Twitter"></div>
-				<div class="button-wrapper">
-					<div id="download-btn"><img src="img/download-btn.jpg" alt="Download to computer"></div>
-					<div id="instagram-btn"><img src="img/instagram-btn.jpg" alt="Download for instagram"></div>
+				 <H2>SHARE YOUR STORY OF INSPIRATION</H2>
+				<p>Inspired by Jeff Bauman and in celebration of human strength and resilience, create your own personal video or photo using Stronger's STRENGTH DEFINES US filter. Share with the world your own story of beating the odds and persevering through life's challenges.</p> 
+				<img class="text" src="img/text.svg" />
+				<div class="quote"><img class="text" src="img/quote.svg" /></div>
+				<div id="create">
+					<form id="video-upload" action="/upload" method="post" enctype="multipart/form-data">
+
+						<label id="create-btn" for="video">
+							<img src="img/CTA.png" alt="Create Your Own Video!"/>
+							<input type="file" name="video" id="fileupload"/>
+							<br/><progress></progress>
+						</label>
+						<img id="spinner" src="img/spinner.svg" alt="Processing"/>
+					</form>
 				</div>
-				<div id="restart-btn"><img src="img/restart-btn.jpg"></div>
+				<div id="share"">
+					<div id="restart-btn"><img src="img/restart-btn.png"></div>
+					<div id="twitter-btn"><img src="img/twitter-btn.png" alt="Share on Twitter"></div>
+					<div id="facebook-btn"><img src="img/facebook-btn.png" alt="Share on Facebook"></div>
+					<div id="instagram-btn"><img src="img/instagram-btn.png" alt="Download for instagram"></div>
+					<div id="download-btn"><a href="" download="StrengthDefinesUs"><img src="img/download-btn.png" alt="Download to computer"></a></div>
+					
+				</div>
 			</div>
+			
 		</div>
 		<div class="right-side">
 			<div id="title-wrap">
 				<div class="padding-clear">
 					<video id="preview" preload autoplay loop>
-						<source src="media/preview.mp4" type="video/mp4"/>
+						<source src="media/preview_2.mp4" type="video/mp4"/>
 					</video>
 				</div>
 			</div>
+			<div id="title-treatment"><div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | Privacy Policy</div></div>
 		</div>
-		<div id="title-treatment"></div>
-		<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | Privacy Policy</div>
+		
+		
 	</div>
   <!-- <form id="video-upload" action="/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="video" id="fileupload"/><br/>
