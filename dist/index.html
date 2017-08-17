@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Strength Defines Us</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<div id="wrapper">
+		
+		<div id="instruct">
+			<p>Personalize your video using our Stronger “Strength Defines Us” filter.<br/> Help inspire others by sharing on your social networks and showing others that you persevere.</p>
+			
+			<form id="video-upload" action="/upload" method="post" enctype="multipart/form-data">
+				<label id="create-btn" for="video">CREATE
+					<input type="file" name="video" id="fileupload"/>
+					<br/><progress></progress>
+				</label>
+			</form>
+		</div>
+		<div id="title-treatment"></div>
+		<div id="title-wrap">
+			<div class="padding-clear">
+				<video id="preview" preload autoplay loop>
+					<source src="media/preview.mp4" type="video/mp4"/>
+				</video>
+			</div>
+			
+		</div>
+		<div id="share"">
+			<div id="facebook-btn"><img src="img/facebook-btn.jpg" alt="Share on Facebook"></div>
+			<div id="twitter-btn"><img src="img/twitter-btn.jpg" alt="Share on Twitter"></div>
+			<div class="button-wrapper">
+				<div id="download-btn"><img src="img/download-btn.jpg" alt="Download to computer"></div>
+				<div id="instagram-btn"><img src="img/instagram-btn.jpg" alt="Download for instagram"></div>
+			</div>
+			<div id="restart-btn"><img src="img/restart-btn.jpg"></div>
+		</div>
+		<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | Privacy Policy</div>
+	</div>
+  <!-- <form id="video-upload" action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="video" id="fileupload"/><br/>
+  </form> -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/scripts.js"></script>
+</body>
+</html>
