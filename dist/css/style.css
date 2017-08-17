@@ -20,6 +20,12 @@ p {
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'ProximaNova-Regular';
+  src: url('../font/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'), url('../font/ProximaNova-Regular.otf') format('opentype'), url('../font/ProximaNova-Regular.woff') format('woff'), url('../font/ProximaNova-Regular.ttf') format('truetype'), url('../font/ProximaNova-Regular.svg#ProximaNova-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 video {
   display: block;
   width: 100%;
