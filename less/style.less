@@ -1,10 +1,12 @@
 html,body {
-	height:100%;
+
 }
 body{
 	background: #e5e3dd;
 	margin: 0;
 	font-family: 'ProximaNova-Regular', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing:grayscale;
 }
 img {
 	width: 100%;
@@ -27,68 +29,137 @@ p{
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'AK';
+  src: url('../font/AkzidenzGrotesk-Black.eot?#iefix') format('embedded-opentype'),  url('../font/AkzidenzGrotesk-Black.woff') format('woff'), url('../font/AkzidenzGrotesk-Black.ttf')  format('truetype'), url('../font/AkzidenzGrotesk-Black.svg#AkzidenzGrotesk-Black') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 video{
 	display: block;
 	width: 100%;
 }
-h2{
-	font-family: 'ProximaNova-Bold',sans-serif;
-	margin: 0;
-	font-size: 0px;
+b {
+	font-family: 'ProximaNova-Bold';
+	white-space: nowrap;
 }
-.clear{
+.clear:after{
 	content: "";
 	clear: both;
 	display: table;
 }
+.nowrap {
+	white-space: nowrap;
+}
 #wrapper{
 	width: 100%;
 	margin: 0 auto;
+	padding-top: 20px;
+	overflow: hidden;
 }
 .left-side{
-    width: calc(~'46% - 20px');
+    width: 39.5%;
     float: left;
-    padding-left: 20px;
-	p{
-		font-size: 0px;
-    	height: 0;
-	}
+    padding: 78px 1.5% 40px 5%;
 	.quote {
-		margin-top: 27px;
-		font-style: italic;
-		font-size: 1.1em;
-		.text {
-			width: 80%;
-		}
-	}
-	.text {
-		width: 90%;
+	    font-size: 22px;
+	    text-align: right;
 	}
 }
 .right-side{
-	width: calc(~'54% - 74px');
+    width: 47%;
     float: left;
-    padding: 40px 40px 40px 34px;
+    padding: 40px 5% 40px 2%;
 }
-#title-wrap{
+#preview-container{
 	clear: both;
     position: relative;
     height: 0;
     padding-top: 56.25%;
-    video{
+    .options{
+    	visibility: hidden;
+    	padding-bottom: 8px;
+    	position: relative;
+    	.square{
+    		display: inline-block;
+    		cursor: pointer;
+    		width: 20px;
+    		height: 20px;
+    		position: relative;
+    		top: 5px;
+    		outline: 1px solid #000;
+    		&.active{
+    			outline:1px solid #1da1f2;
+    		}
+    		&#steel{
+    			background: #5f717b;
+    		}
+    		&#black{
+    			background: #000;
+    		}
+    		&#white{
+    			background: #fff;
+    		}
+    	}
+    }
+    #preview{
     	height: 100%;
     	width: 100%;
+    	position: relative;
+    	top: 0;
+    }
+    #preview-overlay{
+	    position: relative;
+	    top: -100%;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    display: none;
+	    margin:0 auto;
+	    pointer-events: none;
+	    .upper{
+	    	top: 0;
+	    	right:0;
+    	    height: auto;
+    		width: 50%;
+	    }
+	    .lower{
+	    	bottom:8px;
+	    	left: 0;
+    	    width: 30%;
+    	    max-width: 200px;
+    		height: auto;
+    		top: initial;
+	    }
+	    img{
+	    	position: absolute;
+	    	height: 100%;    	
+	    	transform:none;
+	    }
+	}
+    video{
+    	height: 100%;
+    	width: auto;
+    	margin: 0 auto;
     }
 	img{
-	    position: absolute;
-	    right: 0;
-	    top: 0;
-	    z-index: 2;
-	    pointer-events:none;
+        width: auto;
+	    height: 100%;
+	    margin: 0 auto;
+	    display: block;
+	    position: relative;
 	}
+	.portrait {
+    	width: auto;
+    }
+    .landscape {
+    	width: 100%;
+    	height: auto;
+    	
+    }
 }
 .padding-clear{
-	background: #000;
     position: absolute;
     top: 0;
     width: 100%;
@@ -96,30 +167,56 @@ h2{
 }
 #spinner{
     width: 77px;
-    float: right;
-    top: 20px;
-    position: relative;
+    position: absolute;
     display: none;
+    top: -17px;
+    right:100%;
 }
 #instruct {
-	margin-top: 40px;
-	text-align: right;
-	label{
-		margin-top: 31px;
-		float: right;
+    text-align: right;
+    padding: 0 5%;
+    font-size: 27px;
+    h2{
+		font-family: 'ProximaNova-Bold',sans-serif;
+		margin: 0;
+		font-size: 50px;
+		line-height: 0.8em;
+	}
+	p{
+		margin-top: 12px;
+	}
+}
+#create {
+	position: relative;
+	margin-top: 20px;
+	#save-btn{
+	    display: none;
+	}
+	.button {
+		display: inline-block;
 		cursor: pointer;
 		position: relative;
-		img.disabled{
+	    width: 208px;
+	    background: #162e84;
+	    text-align: center;
+	    color: #fff;
+	    border-radius: 6px;
+	    padding: 15px 0 11px;
+	    font-family: 'AK';
+	}
+	#create-btn{
+		&.disabled{
 			opacity: 0.3;
 			cursor: no-drop;
 			pointer-events: none;
 		}
-
+		&:hover .rules {
+			display: block;
+		}
 		input {
 			cursor: inherit;
 		    display: block;
 		    font-size: 999px;
-		    filter: alpha(opacity=0);
 		    height: 100%;
 		    width: 100%;
 		    opacity: 0;
@@ -128,36 +225,95 @@ h2{
 		    text-align: right;
 		    top: 0;
 		}
+		
+	}
+	.error{
+		position: absolute;
+		top: 101%;
+	    width: 500px;
+		right: 0;
+		font-size: 16px;
 	}
 	progress{
 		display: none;
 	    position: absolute;
-	    left: 0;
-	    top: 100%;
-	    width: 100%;
+	    right: 0;
+	    top: 104%;
+	    height: 5px;
+	    width: 208px;
 	}
-	&:after{
-		content:"";
-		clear: both;
-		display: table;
+}
+.rules {
+	position: absolute;
+    bottom: 126%;
+    width: 202%;
+    right: 0;
+    background: #fff;
+    padding: 10%;
+    border-radius: 4px;
+    font-size: 12px;
+    border: 1px solid #000;
+    color: #000;
+    box-shadow: 4px 5px 9px 1px #CCC;
+    font-family: 'Arial';
+    display: none;
+    &:after, &:before {
+		top: 100%;
+		left: 96%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+
+	&:after {
+		border-color: rgba(255, 255, 255, 0);
+		border-top-color: #ffffff;
+		border-width: 13px;
+		margin-left: -31px;
+	}
+	&:before {
+		border-color: rgba(0, 0, 0, 0);
+		border-top-color: #000000;
+		border-width: 14px;
+		margin-left: -32px;
 	}
 }
 #share {
-    background: url(../img/share.svg) 16% 56px no-repeat;
     display: none;
     float: right;
-    width: 60%;
     margin-top: 20px;
 	> div {
 		float: right;
-		width: 40%;
+		width: 18.5%;
 		cursor: pointer;
 		margin-top: 7px;
-		&:nth-child(even){
-			margin-left: 7px;
-		}
+		margin-left: 7px;
+		position: relative;
 		&#twitter-btn {
 			clear: both;
+		}
+		progress {
+			position: absolute;
+			bottom: 89%;
+			width: 100%;
+			display: none;
+		}
+		
+	}
+	.error{
+		position: absolute;
+		top: 84%;
+	    width: 500px;
+		right: 0;
+		font-size: 16px;
+	}
+	#restart-btn{
+		margin-top: 0;
+		&:hover .rules{
+			display: block;
 		}
 	}
 	&:after{
@@ -167,26 +323,113 @@ h2{
 	}
 }
 #title-treatment{
-    width: 89%;
+    width: 100%;
     height: 0;
-    padding-bottom: 24%;
+    padding-bottom: 27%;
     background: url(../img/tt.png) no-repeat;
     background-size: 100%;
     float: right;
-   	margin-top: 31px;
+   	margin-top: 41px;
    	position: relative;
 }
 .copy {
-    text-align: right;
+    text-align: center;
     font-size: 10px;
     color: #232323;
     font-family: 'arial';
     position: absolute;
-    right: 7px;
-    top: 112%;
+    right: 5%;
+    width:90%;
+    padding-top: 5px;
+    a {
+    	color: inherit;
+    }
 }
+#share-modal {
+	position: absolute;
+	background: #fff;
+	width: 90%;
+	max-width: 500px;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	top: 50%;
+	padding:20px;
+	border:1px solid #1da1f2;
+	display: none;
+	box-shadow: 0px 9px 44px -10px rgba(0,0,0,0.5);
+	.pre{
 
+	}
+	.post{
+		display: none;
+		h3{
+			text-align:center;
+		}
+	}
+	h2{
+		text-align: center;
+		margin-top: 0;
+	}
+	textarea{
+	    text-align: left;
+	    width: calc(~'100% - 18px');
+	    font-size: 16px;
+	    resize: none;
+	    line-height: 20px;
+	    padding: 8px;
+	    margin-bottom: 5px;
+	    display: block;
+		&:focus{
+		    outline: 0;
+		    border-color: #1da1f2;
+		    box-shadow: inset 0 0 0 1px rgba(0,132,180,0.7);
+	        
+		}
+	}
+	.close-btn{
+	    position: absolute;
+	    top: 0px;
+	    right: 3px;
+	    cursor: pointer;
+	    transform: rotate(45deg);
+	    font-size: 35px;
+	    font-family: sans-serif;
+	    width: 10px;
+	    height: 10px;
+	}
+	#share-btn {
+		float: right;
+	    color: #fff;
+	    background-color: #1da1f2;
+	    border: 1px solid #1da1f2;
+	    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+        font-size: 14px;
+	    font-weight: bold;
+	    padding: 8px 16px;
+	    position: relative;
+	    border-radius: 18px;
+	    cursor: pointer;
+	    position: relative;
+	    .share-spinner {
+	    	position: absolute;
+    	    right: 100%;
+		    top: 0;
+		    width: 36px;
+		    display: none;
+	    }
+	}
+}
+.disabled{
+	opacity: 0.5;
+	pointer-events: none;
+}
+.desktop {
+	display: block;
+}
 @media screen and (max-width:800px){
+	.desktop {
+		display: none;
+	}
 	.left-side {
 	    width: 90%;
     	padding: 0 5%;
@@ -194,14 +437,109 @@ h2{
     	.text {
     		width: 100%;
     	}
+    	.quote {
+			font-size: 20px;
+			margin-top: 20px;
+		}
 	}
 	.right-side{
 		width: 90%;
 		padding: 0 5%;
 		float: none;
-		margin-top: 10px;
+		margin-top: 0px;
+		padding-bottom: 10px;
+
 	}
-	#instruct label {
-		margin-top: 20px;
+	#title-treatment{
+		margin-top: 19px;
+		margin-bottom: 41px;
+	}
+	#share{
+		position: relative;
+		margin-top: 10px;
+		> div {
+			width: calc(~'50% - 7px');
+			margin-top: 2px;
+			a {
+				display: block;
+				height: 100%;
+			}
+		}
+		#instagram-btn{
+	        position: absolute;
+		    top: 0;
+		    margin-top: 0;
+		}
+	}
+	#instruct {
+		padding: 0 5%;
+		font-size: 22px;
+		h2{
+			font-size: 1.9em;
+		}
+		label {
+			margin-top: 20px;
+		}
+	}
+	#create .error {
+		position: relative;
+		top:0;
+		width:100%;
+	}
+}
+@media screen and (max-width:414px) {
+	#wrapper {
+		padding-top: 5px;
+	}
+	#create {
+		margin-top: 7px;
+		padding-bottom: 10px;
+	}
+	#instruct {
+		font-size: 16px;
+		p{
+			margin-top: 6px;
+		}
+		label {
+			margin-top: 6px;
+		}
+	}
+	#title-treatment{
+		margin:5px auto 0;
+		padding-bottom: 23%;
+		width: 80%;
+	}
+	#preview-container{
+		height: auto;
+		padding-top: 0;
+		.padding-clear{
+			position: relative;
+			width: auto;
+			height: auto;
+		}
+		#preview-overlay {
+			position: absolute;
+			width: 100%;
+			top: 33px;
+			height:calc(~'100% - 33px');
+		}
+		.landscape {
+			width:100%;
+			height: auto;
+		}
+		.portrait {
+			width: 100%;
+		}
+
+	}
+	.left-side {
+		.quote {
+		    font-size: 15.4px;
+		    margin-top: 9px;
+		}
+	}
+	.rules {
+		width:315px;
+		right:-10px;
 	}
 }
