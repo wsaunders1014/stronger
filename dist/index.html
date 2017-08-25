@@ -4,18 +4,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" property="og:description" content="Strength Defines Us Video and Image Generator"/>
 <title>Strength Defines Us</title>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
 <meta property="og:title" content="Strength Defines Us Generator"/>
 <meta property="og:url" content="http:/strengthdefinesus.com"/>
 <meta property="og:type" content="website"/>
-<meta property="og:image" content="http://stg.strengthdefinesus.com/img/tt.png" />
+<meta property="og:image" content="http://stg.strengthdefinesus.com/img/STR_ICON_BUTTON.png" />
 <meta property="fb:app_id" content="1956267324660722"/>
 </head>
 <body>
 	<div id="wrapper" class="clear">
 		<div id="instruct" class="clear">
 			<H2>SHARE YOUR STORY OF INSPIRATION</H2>
-			<p>Inspired by Jeff Bauman and in celebration of human strength and resilience, create your own personal video or photo using Stronger’s STRENGTH DEFINES US filter. Share with the world your own story of beating the odds and persevering through life’s challenges. 
+			<p>Inspired by Jeff Bauman and in celebration of human strength and resilience, create your own personal video or photo using Stronger’s <span class="nowrap">STRENGTH DEFINES US</span> filter. Share with the world your own story of beating the odds and persevering <span class="nowrap">through life’s challenges. </span>
 			
 			</p> 
 			<div id="create">
@@ -44,14 +44,14 @@
 				<div id="twitter-btn"><img src="img/twitter-btn.png" alt="Share on Twitter"></div>
 				<div id="facebook-btn"><img src="img/facebook-btn.png" alt="Share on Facebook"></div>
 				<div id="instagram-btn">
-					<a href="" download="StrengthDefinesUs"><img src="img/instagram-btn.png" alt="Download for instagram"/></a>
+					<a href="/download" download="StrengthDefinesUs"><img src="img/instagram-btn.png" alt="Download for instagram"/></a>
 				</div>
 			</div>
 		</div>
 		<div class="clear">
 			<div class="left-side">
 				<div class="quote desktop">
-					"To be inspired is great, but to inspire is an honor."
+					"To be inspired is great, <span class="nowrap">but to inspire is an honor."</span>
 					<!-- <br/>- Stacey T. Hunt&nbsp; -->
 				</div>
 				<div id="title-treatment"></div>
@@ -98,14 +98,19 @@
 	</div>
 	<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | <a href="http://roadsideattractions.com/wp-content/uploads/2017/05/PrivacyPolicy-051817.pdf">Privacy Policy</a></div>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script>var url = '<%= url %>';
-		var type = '<%= type %>';
-		var videoW = '<%= videoW %>';
-		var videoH = '<%= videoH %>';
-		var shareModal = '<%=  shareModal %>';
-		var at = '<%= at %>';
-		var ats = '<%= ats %>';
+	<script>
+		var session = {
+			url:'<%= url %>',
+			type:'<%= type %>',
+			videoW:'<%= videoW %>',
+			videoH:'<%= videoH %>',
+			shareModal:'<%=  shareModal %>',
+			at:'<%= at %>',
+			aws:'<%= aws %>',
+			mobile:'<%= mobile %>',
+			portrait:'<%= portrait %>',
+		}
 	</script>
-	<script type="text/javascript" src="js/scripts.js"></script>
+	<script type="text/javascript" src="js/scripts.min.js"></script>
 </body>
 </html>

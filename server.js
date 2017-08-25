@@ -27,20 +27,31 @@ var https_options = {
  key: fs.readFileSync("stronger.key"),
  cert: fs.readFileSync("stronger.crt")
 };
+var browser = require('browser-detect');
+
+app.use(session({saveUninitialized:true,resave:true, store: new FileStore({retries:1}),secret:'stg'}));
 
 app.get('/', function(req,res){
 	res.send('Site Ready');
 })
-app.use(session({saveUninitialized:true,resave:true, store: new FileStore({}),secret:'stg'}));
 app.get('/dev', function(req,res){
-
+	var result = browser(req.headers['user-agent']);
+	if(result.mobile == true)
+		req.session.mobile = true;
+	else
+		req.session.mobile = false;
 	if(req.session.url == null){
 		req.session.url = null;
 		req.session.type = null;
+		req.session.portrait = null;
+		req.session.aws = null;
+	}
+	if(typeof(req.session.shareModal) == 'undefined'){
+		req.session.shareModal = null;
 	}
 	fs.readFile('dist/index.html','utf-8', function(err,content){
 		res.set('Content-Type','text/html');
-		var rendered = ejs.render(content, {at:null,ats:null,shareModal:false,url:req.session.url,type:req.session.type,videoW:req.session.videoW,videoH:req.session.videoH});
+		var rendered = ejs.render(content, {portrait:req.session.portrait,aws:req.session.aws,mobile:req.session.mobile, at:req.session.at,shareModal:req.session.shareModal,url:req.session.url,type:req.session.type,videoW:req.session.videoW,videoH:req.session.videoH});
 		res.end(rendered);
 	})
 });
@@ -51,9 +62,8 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.post('/upload', function(req,res){
-	console.log(req.body)
-	/*  WORKS! File is uploaded to tmp server, encoded, saved, then uploaded to S3 Bucket, returns the url that loads the move into page */
 	console.log('Request received');
+	console.log()
 	if (!req.files)
      	return res.status(400).send({message:'No files were uploaded.'});
 
@@ -77,8 +87,6 @@ app.post('/upload', function(req,res){
     var videoW = null;
     var videoH = null;
     var orientation = 1;
-  	
-  
   	if(video.ext == 'jpg' || video.ext == 'jpeg'){
   		try {
 		    new ExifImage({ image : 'tmp_files/'+tmpName+'.'+video.ext }, function (error, exifData) {
@@ -103,9 +111,7 @@ app.post('/upload', function(req,res){
 	    		console.log(err);
 	    		//res.send(err)
 	    	}else{
-	    		//res.send(data);
-	    		
-				var videoStream = (data.streams.length > 1) ? data.streams[1]:data.streams[0];
+				var videoStream = (data.streams[0].codec_type=='video') ? data.streams[0]:data.streams[1];
 	  			console.log(videoStream);
 		  		var landscape = true;
 		  		videoW = videoStream.width;
@@ -114,25 +120,26 @@ app.post('/upload', function(req,res){
 		  		//CHECK DIMENSIONS AGAINST MINIMUM
 		  		if(videoW <300 || videoH < 300)
 		  			return res.status(200).send({error:true, message:'File must be at least 300x300 pixels.'});
-		  		var constrainWidth = (videoW > videoH) ? true:false;
-		  		if(!constrainWidth || videoStream.rotation == '-90' || videoStream.rotation == '90') {
-		  			landscape = false;
-		  		}
+
+		  	
+		  		if(videoStream.rotation === '-90' || videoStream.rotation === '90') 
+		  			req.session.portrait = true;
+		  		else
+		  			req.session.portrait = false;
+
 		  		// Route type to function
 		  		if(!isVideo)
 		  			addOverlayToImage(videoW,videoH);
 		  		else
 		  			addOverlayToVideo(videoW,videoH,landscape);
-		    	}
+		    }	
 	    })
     }
-	
-
 	function addOverlayToVideo(w,h,landscape){
-		//var scale = 'iw:iw*0.5625';
+
 		var overlayHashtag = 'overlay_hashtag.png';
-		var scale = '-1:720';
-		if(w > 1000) var scale = '1280:-1';
+		var scale = (req.session.portrait) ? '720:-1':'1280:-1';
+
 		switch(req.body.color) {
 			case 'steel':
 				var overlayText = 'overlay_text.png';
@@ -146,36 +153,6 @@ app.post('/upload', function(req,res){
 			default:
 			break;
 		}
-		// switch(req.body.color) {
-		// 	case 'steel':
-		// 		var overlay = 'overlay_1920.png';
-		// 	break;
-		// 	case 'white':
-		// 		var overlay = 'overlay_1920w.png';
-		// 	break;
-		// 	case 'black':
-		// 		var overlay = 'overlay_1920b.png';
-		// 	break;
-		// 	default:
-		// 	break;
-		// }
-		
-		// if(!landscape){
-		// 	scale = 'iw:ih';
-		// 	switch(req.body.color) {
-		// 		case 'steel':
-		// 			overlay = 'overlay_1080.png';
-		// 		break;
-		// 		case 'white':
-		// 			overlay = 'overlay_1080w.png';
-		// 		break;
-		// 		case 'black':
-		// 			overlay = 'overlay_1080b.png';
-		// 		break;
-		// 		default:
-		// 		break;
-		// 	}
-		// }
 		var command = ffmpeg();
 		command.on('end', onEnd)
 		.on('progress', onProgress)
@@ -231,7 +208,6 @@ app.post('/upload', function(req,res){
 		.input(overlayText)
 		.input(overlayHashtag)
 		.complexFilter([flip+"scale="+scale+":force_original_aspect_ratio=decrease [scaled0];[1][scaled0]scale2ref=iw/2:ow*0.40706126687435[overlay][base];[base][overlay]overlay=main_w-overlay_w:0[v];[v][2]overlay=10:main_h-overlay_h-5[out]"])
-		//.complexFilter(["[v][2]overlay[out]"])
 		.outputOptions(['-map [out]'])
 		.output('uploads/'+tmpName+'.'+video.ext)
 		.run();
@@ -248,16 +224,24 @@ app.post('/upload', function(req,res){
 		var params = {ACL:'public-read', Bucket: 'strengthdefinesus', Key: 'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), Body: fs.createReadStream('uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext))};
 		
 		var uploadPromise = S3Client.upload(params).promise();
-		uploadPromise.then(function(data){
+		uploadPromise.then(function(data,error){
 			//console.log(data);
+			console.log(data,error)
 			var timestamp2 = Date.now();
 			var timeElapsed = (timestamp2-timestamp)/1000;
-			res.send({error:false, videoW:videoW,videoH:videoH, type: (isVideo) ? 'video':'image', aws_url:data.Location, server_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), timeElapsed:timeElapsed});
+			req.session.aws = data.Location;
+			res.set('Content-Type','text/json');
+
+			res.write(JSON.stringify({error:false, videoW:videoW,videoH:videoH, type: (isVideo) ? 'video':'image', aws_url:data.Location, server_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), timeElapsed:timeElapsed}));
+			res.end()
 		}).catch(function(error){
 			//console.log(error);
+			req.session.aws = 'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext);
 			var timestamp2 = Date.now();
 			var timeElapsed = (timestamp2-timestamp)/1000;
-			res.send({error:false, videoW:videoW,videoH:videoH, type: (isVideo) ? 'video':'image', aws_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), server_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), timeElapsed:timeElapsed});
+			res.set('Content-Type','text/json');
+			res.write(JSON.stringify({error:false, videoW:videoW,videoH:videoH, type: (isVideo) ? 'video':'image', aws_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), server_url:'uploads/'+tmpName+((isVideo) ? '.mp4':'.'+video.ext), timeElapsed:timeElapsed}));
+			res.end();
 		});
 		
 	}
@@ -265,16 +249,16 @@ app.post('/upload', function(req,res){
 		console.log(err, stdout,stderr)
 		console.log('Cannot process video: ' + err.message);
 		res.send(stderr);
-}
-	/* Attempting to send stream to AWS Encoder instead of using ffmpeg  */
+	}
+	function onProgress(progress){
+	 // if (progress.timemark != timemark) {
+	 // timemark = progress.timemark;
+	 //console.log('Progress: ' + progress.percent + '% done');
+		//console.log(progress.percent);
+		// res.set('Content-Type', 'text/json');
+		// res.write(progress.percent.toString());
+	}
 });
-function onProgress(progress){
- // if (progress.timemark != timemark) {
- // timemark = progress.timemark;
- //console.log('Progress: ' + progress.percent + '% done');
- console.log('Processing...');
-}
-
 
 var twitter = new twitterAPI({
 	consumerKey: consumerKey,
@@ -287,70 +271,77 @@ app.get('/twitter', function(req,res){
 			console.log(error);
 			return res.send({err: error});
 		}
-		accessToken = accessToken;
-		accessTokenSecret = accessTokenSecret;
-		fs.readFile('dist/index.html','utf-8', function(err,content){
-			var rendered = ejs.render(content, {at:accessToken, ats:accessTokenSecret, url:req.session.url,type:req.session.type,videoW:req.session.videoW,videoH:req.session.videoH, shareModal:true});
-			res.end(rendered);
-		})
+		req.session.at = accessToken;
+		req.session.ats = accessTokenSecret;
+		req.session.shareModal = true;
+		res.redirect(301,'/dev')
 	})
 	
 });
 
 var requestToken = null;
 var requestTokenSecret = null;
-var accessToken = null;
-var accessTokenSecret = null;
-
 //client posts to this
 app.post('/authTwitter', function(req,res){
 	twitter.getRequestToken(function(error,requestToken,requestTokenSecret,results){
 		if(error){
 			console.log('error getting OAuth request token: ',error)
 		}else{
-			console.log(requestToken, requestTokenSecret);
+			//console.log(requestToken, requestTokenSecret);
 			requestToken = requestToken;
 			requestTokenSecret = requestTokenSecret;
 			res.send({requestToken:requestToken});
-			res.end();
 		}
 	})
 });
 app.post('/postToTwitter', function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
+	req.session.shareModal = false;
 	if(req.body.type=='image'){
-		twitter.uploadMedia({media:req.body.url},req.body.at,req.body.ats, function(error,data){
+		twitter.uploadMedia({media:req.body.url},req.session.at,req.session.ats, function(error,data){
 			if(error) 
-				res.send({status:'fail',error:error})
+				res.end({status:'fail',error:error})
 			twitter.statuses("update", {
 				status:req.body.status,
 				media_ids:data.media_id_string
-			},req.body.at,req.body.ats, function(error,data,results){
-				
+			},req.session.at,req.session.ats, function(error,data,results){
 				if(error) 
 					res.send({status:'fail',error:error})
-				res.send({status:'success'})
+				res.end({status:'success'})
 			})
 		});
 	}else{
-		twitter.uploadVideo({media:req.body.url},req.body.at,req.body.ats, function(error,data){
+
+		twitter.uploadVideo({media:req.body.url},req.session.at,req.session.ats, function(error,data){
 			console.log(data);
 			if(error) 
-				res.send({status:'fail',error:error})
+				res.end({status:'fail',error:error})
 			twitter.statuses("update", {
 				status:req.body.status,
 				media_ids:data.media_id_string
-			},req.body.at,req.body.ats, function(error,data,results){
+			},req.session.at,req.session.ats, function(error,data,results){
 				
 				if(error) 
 					res.send({status:'fail', error:error})
-				res.send({status:'success'})
+				res.end({status:'success'})
 			})
 		});
 	}
 	
 
-})
+});
+app.get('/download', function(req, res) {
+  //res.download(req.session.aws);
+  var file = __dirname + '/'+req.session.url;
+   res.set('Content-disposition','attachment; filename='+file);
+  if(req.session.type =='video')
+  	res.append('Content-Type','video/mp4');
+ 
+  var filestream = fs.createReadStream(file);
+  filestream.pipe(res);
+  //res.download(file)
+  //res.attachment([file])
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -364,10 +355,10 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
+  	console.log(err)
     res.status(err.status || 500).json({
       message: err.message,
       error: err,
-      test:'test'
     });
   });
 }

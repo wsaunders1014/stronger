@@ -9,6 +9,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.0.12",
     "aws-sdk": "^2.96.0",
     "body-parser": "~1.15.1",
+    "browser-detect": "^0.2.18",
     "debug": "~2.2.0",
     "ejs": "^2.5.7",
     "exif": "^0.6.0",
