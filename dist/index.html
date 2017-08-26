@@ -28,7 +28,7 @@
 					<label class="button" id="create-btn" for="video">
 						<input type="file" name="video" id="video"/>
 						<div class="rules">
-							Accepted file formats: .gif, .jpg, .png, .mp4, .avi, .mov. Images must be at least 300 x 300 pixels. Videos must be under 100mb and less than 120 seconds.
+							Accepted file formats: .gif, .jpg, .png, .mp4, .avi, .mov. Images must be at least 300 x 300 pixels. Videos must be under 100mb. Only first 30 seconds will be rendered for video.
 						</div>
 						<span>CREATE</span>
 						
@@ -97,7 +97,7 @@
 		</div>
 	</div>
 	<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | <a href="http://roadsideattractions.com/wp-content/uploads/2017/05/PrivacyPolicy-051817.pdf">Privacy Policy</a></div>
-	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/scripts.min.js"></script>
 	<script>
 		var session = {
 			url:'<%= url %>',
