@@ -307,7 +307,7 @@ $(document).ready(function(){
                 location.href = 'https://twitter.com/oauth/authenticate?oauth_token='+data.requestToken;
             });
         }else{
-             $('#share-modal').find('h2').html('Share to Twitter').show();
+             $('#share-modal').show().find('h2').html('Share to Twitter');
              $('#share-btn').html('SHARE').removeClass('facebook').addClass('twitter');
         }
         

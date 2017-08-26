@@ -30,7 +30,10 @@ var https_options = {
 var browser = require('browser-detect');
 
 app.use(session({saveUninitialized:true,resave:true, store: new FileStore({retries:1}),secret:'stg'}));
-
+app.use(function(res,req,next){
+	 res.header('Access-Control-Allow-Origin', 'strengthdefinesus.com');
+	 next();
+})
 app.get('/', function(req,res){
 	res.send('Site Ready');
 })
@@ -163,6 +166,7 @@ app.post('/upload', function(req,res){
 		//.complexFilter(["[1][0]scale2ref="+scale+"[overlay][base];[base][overlay]overlay[v]"])
 		.complexFilter(["[0]scale="+scale+":force_original_aspect_ratio=decrease [scaled0];[1][scaled0]scale2ref=iw/2:'min(500\,ow*0.40706126687435)'[overlay][base];[base][overlay]overlay=main_w-overlay_w:0[v];[v][2]overlay=10:main_h-overlay_h-5[out]"])
 		.outputOptions(['-map [out]'])
+		.duration(30)
 		.output('uploads/'+tmpName+'.mp4')
 		.run();
 	}
