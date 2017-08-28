@@ -51,7 +51,7 @@ $(document).ready(function(){
             img.src = session.url;
             $('#preview').html('').append(img);
         }
-        //$('#instagram-btn').find('a').attr('href', aws);
+        $('#instagram-btn').find('a').attr('href', session.aws);
         $('#facebook-btn').attr('data-url',session.aws);
         $('#twitter-btn').attr('data-url',session.url);
     }
@@ -118,7 +118,7 @@ $(document).ready(function(){
         }).done(function(data){
             fileReady = false;
             console.log(data);
-            //File was successfull
+            //File was successful
             if(!data.error){
                 $('#spinner').hide();
                 $('progress').hide();
@@ -186,7 +186,6 @@ $(document).ready(function(){
         if(!fileReady) {
             $('.error').html('');
             var file = this.files[0];
-            console.log(this.files[0]);
             var contW = $('#preview').width();
             //FILE TOO BIG
             if((this.files[0].size/1000)/1024 > 150) {
@@ -206,16 +205,23 @@ $(document).ready(function(){
                     vid.setAttribute('loop','loop');
                     vid.setAttribute('playsinline','true')
                     vid.setAttribute('src',fileURL);
+                    console.log(vid.videoWidth);
                     $('#preview').html('').append(vid);
                     vid.addEventListener('canplay',function(){
-                         if($('#preview').find('video').height() <= $('#preview').find('video').width()*0.5625){
-                            $('#preview').find('video').addClass('landscape');
-                            $('#preview-overlay').css({width:100+'%'})
-                        }else{
-                            $('#preview').find('video').addClass('portrait');
-                            $('#preview-overlay').css({width:$('#preview').find('video').width()})
+                        console.log(vid.videoWidth);
+                        if(vid.videoWidth < 300 || vid.videoHeight < 300){
+                            $('.error').html('Video size must be at least 300 x 300 pixels.');
+                            resetUpload();
+                       }else{
+                            if($('#preview').find('video').height() <= $('#preview').find('video').width()*0.5625){
+                                $('#preview').find('video').addClass('landscape');
+                                $('#preview-overlay').css({width:100+'%'})
+                            }else{
+                                $('#preview').find('video').addClass('portrait');
+                                $('#preview-overlay').css({width:$('#preview').find('video').width()})
+                            }
+                            $('.options').css({left:($('#preview').width()-$('#preview').find('video').width())/2});
                         }
-                       $('.options').css({left:($('#preview').width()-$('#preview').find('video').width())/2});
                     });
                     vid.load();
                     vid.play();
@@ -223,16 +229,20 @@ $(document).ready(function(){
                     var img = new Image();
                     img.onload = function(){
                        // console.log(img.width,img.height)
-                        if(img.height <= img.width*0.5625){
-                            //landscape
+                       if(img.width < 300 || img.height < 300){
+                            $('.error').html('Image size must be at least 300 x 300 pixels.');
+                       }else{
+                            if(img.height <= img.width*0.5625){
+                                //landscape
 
-                            img.setAttribute('class','landscape');
-                   
-                        }else{
-                            //portrait or square
-                              img.setAttribute('class','portrait');
-                            $('#preview-overlay').css({width:img.width})
-                            $('.options').css({left:($('#preview').width()-img.width)/2});
+                                img.setAttribute('class','landscape');
+                       
+                            }else{
+                                //portrait or square
+                                  img.setAttribute('class','portrait');
+                                $('#preview-overlay').css({width:img.width})
+                                $('.options').css({left:($('#preview').width()-img.width)/2});
+                            }
                         }
                     }
                     img.src = fileURL;
@@ -268,7 +278,7 @@ $(document).ready(function(){
         $('progress').hide();
         $('#spinner').hide();
         $('#create').show();
-        $('.error').html('');
+        //$('.error').html('');
     }
     $('#facebook-btn').on(event, function(e){
         e.preventDefault();e.stopPropagation();

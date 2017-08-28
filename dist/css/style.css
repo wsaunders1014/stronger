@@ -322,7 +322,7 @@ b {
   position: relative;
 }
 .copy {
-  text-align: center;
+  text-align: right;
   font-size: 10px;
   color: #232323;
   font-family: 'arial';
@@ -472,6 +472,9 @@ b {
     position: relative;
     top: 0;
     width: 100%;
+  }
+  .copy {
+    text-align: center;
   }
 }
 @media screen and (max-width: 414px) {

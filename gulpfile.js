@@ -9,38 +9,43 @@ const changed = require('gulp-changed');
 var inlinesource = require('gulp-inline-source');
 const rev = require('gulp-rev');
 var revReplace = require("gulp-rev-replace");
+var gzip = require('gulp-gzip');
+
+
 gulp.task('default', ['watch']);
 gulp.task('compileLess', function(cb){
-	return gulp.src('less/*.less')
+	return gulp.src(['less/*.less','!dist/css/*.gz'])
 	  .pipe(sourcemaps.init())
 	  .pipe(less())
-    .pipe(rev())
 	  .pipe(gulp.dest('dist/css'))
 	  .pipe(rename({suffix:'.min'}))
 	  .pipe(cleanCSS({compatibility: 'ie8'}))
-    .pipe(rev())
 	  .pipe(sourcemaps.write('maps'))
 	  .pipe(gulp.dest('dist/css'));
-})
-gulp.task("index", function(cb){
-  var jsFilter = filter("**/*.js", { restore: true });
-  var cssFilter = filter("**/*.css", { restore: true });
-  return gulp.src("src/index.html")
-  .pipe(jsFilter)
-  .pipe(cssFilter)
-})
-gulp.task("revreplace", ["revision"], function(){
-  var manifest = gulp.src("./" + opt.distFolder + "/rev-manifest.json");
-
-  return gulp.src(opt.srcFolder + "/index.html")
-    .pipe(revReplace({manifest: manifest}))
-    .pipe(gulp.dest(opt.distFolder));
 });
+gulp.task('gzip', function(){
+  return gulp.src(['dist/**/*','!dist/**/*.gz'])
+  .pipe(gzip())
+  .pipe(gulp.dest('dist'))
+})
+// gulp.task("index", function(cb){
+//   var jsFilter = filter("**/*.js", { restore: true });
+//   var cssFilter = filter("**/*.css", { restore: true });
+//   return gulp.src("src/index.html")
+//   .pipe(jsFilter)
+//   .pipe(cssFilter)
+// })
+// gulp.task("revreplace", ["revision"], function(){
+//   var manifest = gulp.src("./" + opt.distFolder + "/rev-manifest.json");
+
+//   return gulp.src(opt.srcFolder + "/index.html")
+//     .pipe(revReplace({manifest: manifest}))
+//     .pipe(gulp.dest(opt.distFolder));
+// });
 gulp.task('minify-js', function (cb) {
   pump([
   		  sourcemaps.init(),
-        gulp.src('src/js/*.js'),
-        rev(),
+        gulp.src(['src/js/*.js','dist/js/*.gz']),
         gulp.dest('dist/js'),
         uglify(),
         rename({suffix:'.min'}),
@@ -53,6 +58,6 @@ gulp.task('minify-js', function (cb) {
 
 gulp.task('watch', function() {
   gulp.watch('src/img/*', ['imgmin']);
-  gulp.watch('src/js/*', ['minify-js']);
-  gulp.watch('less/*', ['compileLess']);
+  gulp.watch('src/js/*', ['minify-js','gzip']);
+  gulp.watch('less/*', ['compileLess','gzip']);
 });
