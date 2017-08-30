@@ -1,85 +1,82 @@
     var fileReady = false;
     var twtShared = false;
     var fbShared = false;
+var session_token = session.sessionID;
+setCookie('session_token',session_token);
 $(document).ready(function(){
     //LOAD FB SDK
-    if(window.self == window.top){
-        console.log('parent')
-    }else{
-        console.log('iframe')
-    }
     $.ajaxSetup({ cache: true });
-    $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
-        FB.init({
-          appId: '1956267324660722',
-          version: 'v2.10'
-        });     
+    $('.contest-iframe').css({height:'auto !important'})
+    $.get('https://strengthdefinesus.com/sessions/'+session_token).done(function(data){
+        console.log(JSON.parse(data));
+        if(data != null){
+             data = JSON.parse(data);
+             session = data;
+        }
+       
+        if(session.url && session.type){
+            $('#create').hide();
+            if(session.mobile == 'true' && session.type=="video")
+                $('#instagram-btn').hide();
+            $('#share').show();
+            if(session.type == 'video'){
+                var vid = document.createElement('VIDEO');
+                vid.setAttribute('controls','controls');
+                vid.setAttribute('autoplay','autoplay');
+                vid.setAttribute('muted','muted');
+                vid.setAttribute('loop','loop');
+                vid.setAttribute('playsinline','true')
+                vid.setAttribute('src',session.aws);
+                $('#preview').html('').append(vid);
+                vid.addEventListener('canplay',function(){
+                     if($('#preview').find('video').height() <= $('#preview').find('video').width()*0.5625){
+                        $('#preview').find('video').addClass('landscape');
+                    }else{
+                        $('#preview').find('video').addClass('portrait');
+                    }
+                });
+                vid.load();
+                vid.play();
+            }else{
+                var img = new Image();
+                img.onload = function(){
+                   // console.log(img.width,img.height)
+                    if(img.height <= img.width*0.5625){
+                        img.setAttribute('class','landscape');
+                    }else{
+                        //portrait or square
+                          img.setAttribute('class','portrait');
+                    }
+                }
+                img.onerror = function(){
+                    resetUpload();
+                       var vid = document.createElement('VIDEO');
+                        vid.setAttribute('controls','controls');
+                        vid.setAttribute('autoplay','autoplay');
+                        vid.setAttribute('muted','muted');
+                        vid.setAttribute('loop','loop');
+                        vid.setAttribute('playsinline','true');
+                        vid.setAttribute('class','landscape');
+                        vid.setAttribute('src','https://strengthdefinesus.com/media/preview.mp4');
+                        $('#preview').html('').append(vid);
+                        vid.load();
+                        vid.play();
+
+                }
+                img.src = session.url;
+                $('#preview').html('').append(img);
+            }
+            $('#instagram-btn').find('a').attr('href', session.aws);
+            $('#facebook-btn').attr('data-url',session.aws);
+            $('#twitter-btn').attr('data-url',session.url);
+        }
+        
     });
+   
     var chosenColor = 'steel';
     var event = (session.mobile=='true') ? 'touchstart':'click';
 
-    if(session.url && session.type){
-        $('#create').hide();
-        if(session.mobile == 'true' && session.type=="video")
-            $('#instagram-btn').hide();
-        $('#share').show();
-        if(session.type == 'video'){
-            var vid = document.createElement('VIDEO');
-            vid.setAttribute('controls','controls');
-            vid.setAttribute('autoplay','autoplay');
-            vid.setAttribute('muted','muted');
-            vid.setAttribute('loop','loop');
-            vid.setAttribute('playsinline','true')
-            vid.setAttribute('src',session.aws);
-            $('#preview').html('').append(vid);
-            vid.addEventListener('canplay',function(){
-                 if($('#preview').find('video').height() <= $('#preview').find('video').width()*0.5625){
-                    $('#preview').find('video').addClass('landscape');
-                }else{
-                    $('#preview').find('video').addClass('portrait');
-                }
-            });
-            vid.load();
-            vid.play();
-        }else{
-            var img = new Image();
-            img.onload = function(){
-               // console.log(img.width,img.height)
-                if(img.height <= img.width*0.5625){
-                    img.setAttribute('class','landscape');
-                }else{
-                    //portrait or square
-                      img.setAttribute('class','portrait');
-                }
-            }
-            img.onerror = function(){
-                resetUpload();
-                   var vid = document.createElement('VIDEO');
-                    vid.setAttribute('controls','controls');
-                    vid.setAttribute('autoplay','autoplay');
-                    vid.setAttribute('muted','muted');
-                    vid.setAttribute('loop','loop');
-                    vid.setAttribute('playsinline','true');
-                    vid.setAttribute('class','landscape');
-                    vid.setAttribute('src','media/preview.mp4');
-                    $('#preview').html('').append(vid);
-                    vid.load();
-                    vid.play();
-
-            }
-            img.src = session.url;
-            $('#preview').html('').append(img);
-        }
-        $('#instagram-btn').find('a').attr('href', session.aws);
-        $('#facebook-btn').attr('data-url',session.aws);
-        $('#twitter-btn').attr('data-url',session.url);
-    }
-    // if(session.shareModal=='true'){
-    //     $('#share-modal').show().find('#share-btn').addClass('twitter');
-    //     //$('#instagram-btn').find('a').attr('href', aws);
-    //     $('#facebook-btn').attr('data-url', session.aws);
-    //     $('#twitter-btn').attr('data-url', session.url);
-    // }
+   
     $('.square').on('click touchstart tap', function(e){
         e.preventDefault();e.stopPropagation();
         var id= $(this).attr('id');
@@ -88,13 +85,13 @@ $(document).ready(function(){
         chosenColor = id;
         switch(id){
             case 'steel':
-                $('#preview-overlay').find('.upper').attr('src','img/overlay_text.png?'+Date.now());
+                $('#preview-overlay').find('.upper').attr('src','https://strengthdefinesus.com/img/overlay_text.png?'+Date.now());
             break;
             case 'black':
-             $('#preview-overlay').find('.upper').attr('src','img/overlay_textb.png?'+Date.now());
+             $('#preview-overlay').find('.upper').attr('src','https://strengthdefinesus.com/img/overlay_textb.png?'+Date.now());
             break;
             case 'white':
-             $('#preview-overlay').find('.upper').attr('src','img/overlay_textw.png?'+Date.now());
+             $('#preview-overlay').find('.upper').attr('src','https://strengthdefinesus.com/img/overlay_textw.png?'+Date.now());
             default:
             break;
         }
@@ -107,9 +104,9 @@ $(document).ready(function(){
         $('.options').css({visibility:'hidden'})
         var formData = new FormData($('#video-upload')[0])
         formData.append('color',chosenColor);
-       
+        formData.append('session_token', session_token);
         $.ajax({
-            url:'/upload',
+            url:'https://strengthdefinesus.com/upload',
             type: 'POST',
             contentType: false,
             data:formData,  // The form with the file inputs.
@@ -185,13 +182,12 @@ $(document).ready(function(){
                 }
                 $('#create').hide();
                 $('#share').show();
-                 
+              
+                
                 //Add S3 url to download button
-                session.aws = data.aws_url;
-                session.url = data.server_url;
-                session.type = data.type;
                 $('#instagram-btn').find('a').attr('href', data.aws_url);
                 $('#facebook-btn').attr('data-url',data.aws_url);
+                session.type = data.type;
                 $('#twitter-btn').attr('data-url', data.server_url);
                 console.log('Time Elapsed: '+data.timeElapsed+' seconds');
             }else{
@@ -227,7 +223,6 @@ $(document).ready(function(){
                     vid.setAttribute('loop','loop');
                     vid.setAttribute('playsinline','true')
                     vid.setAttribute('src',fileURL);
-                    console.log(vid.videoWidth);
                     $('#preview').html('').append(vid);
                     vid.addEventListener('canplay',function(){
                         console.log(vid.videoWidth);
@@ -235,7 +230,7 @@ $(document).ready(function(){
                             $('.error').html('Video size must be at least 300 x 300 pixels.');
                             resetUpload();
                        }else{
-                            if($('#preview').find('video').height() <= $('#preview').find('video').width()*0.5625){
+                            if(vid.videoHeight <= vid.videoWidth*0.5625){
                                 $('#preview').find('video').addClass('landscape');
                                 $('#preview-overlay').css({width:100+'%'})
                             }else{
@@ -258,14 +253,16 @@ $(document).ready(function(){
                                 //landscape
 
                                 img.setAttribute('class','landscape');
-                       
+                                $('#preview-overlay').css({height:img.height})
                             }else{
                                 //portrait or square
                                  img.setAttribute('class','portrait');
+                                 $('#preview-overlay').css({height:img.height})
                                 //alert(img.width, $('#preview-overlay').width())
                                 $('#preview-overlay').css({width:img.width})
-                                $('.options').css({left:($('#preview').width()-img.width)/2});
+                                 
                             }
+                            $('.options').css({left:($('#preview').width()-img.width)/2});
                         }
                     }
                     img.src = fileURL;
@@ -289,6 +286,7 @@ $(document).ready(function(){
     // EVENTS 
     $('#restart-btn').on('click touchstart tap', function(e){
         e.preventDefault();e.stopPropagation();
+        $('.error').html('')
         resetUpload()
     });
     function resetUpload(){
@@ -303,48 +301,16 @@ $(document).ready(function(){
         $('#create').show();
         //$('.error').html('');
     }
-    $('#facebook-btn').on(event, function(e){
+    $('#facebook-btn').on('click', function(e){
         e.preventDefault();e.stopPropagation();
-        if(FB){
-            FB.getLoginStatus(function(res){
-                statusChangeCallback(res);
-            });
-        }  
+        var fbWindow = window.open('https://strengthdefinesus.com/shareWindow?mode=facebook&aws='+$('#facebook-btn').attr('data-url')+'&url='+$('#facebook-btn').attr('data-url')+'&type='+session.type,'shareWindow','location=0,status=0,width=800,height=600');
     });
-    function statusChangeCallback(res){
-        console.log(res);
-        if(res.status == 'connected') {
-            $('#share-modal').show().find('h2').html('Share to Facebook');
-            $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
-        }else {
-            console.log('test');
-            if(session.mobile == "true"){
-                location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/&response_type=token&scope=publish_actions,user_videos,user_photos"
-            }else{
-                FB.login(function(res){
-                    console.log(res);
-                    if(res.status == 'connected'){
-                        $('#share-modal').show().find('h2').html('Share to Facebook');
-                        $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
-                    }
-                }, {scope:'public_profile, user_videos,user_photos,publish_actions'});
-            }
-        }
-    }
+   
     //Authorizes and Logs in User
-    $('#twitter-btn').on(event, function(e){
+    $('#twitter-btn').on('click', function(e){
         e.preventDefault();e.stopPropagation();
-        //if(!session.at){
-            $.post('/authTwitter', {url:$(this).attr('data-url')})
-            .done(function(data){
-                var twitWindow = window.open('https://twitter.com/oauth/authenticate?oauth_token='+data.requestToken,'shareWindow','location=0,status=0,width=800,height=400');
-            });
-        // }else{
-        //      $('#share-modal').show().find('h2').html('Share to Twitter');
-        //      $('#share-btn').html('SHARE').removeClass('facebook').addClass('twitter');
-        // }
-        
-
+        var twitWindow = window.open('https://strengthdefinesus.com/twtAuth?url='+$('#twitter-btn').attr('data-url')+'&type='+session.type,'shareWindow','location=0,status=0,width=800,height=400');
+      
     });
     //Actually shares the video or image to twitter
    $('#share-btn').on(event, function(e){
@@ -355,7 +321,7 @@ $(document).ready(function(){
             if(!twtShared) {
                 twtShared = true;
                 $.ajax({
-                    url:'/postToTwitter', 
+                    url:'https://strengthdefinesus.com/postToTwitter', 
                     type:'POST', 
                     data:{
                         status:$('#share-modal').find('textarea').val(),
@@ -398,7 +364,10 @@ $(document).ready(function(){
                             fbShared = true;
                             $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
                             setTimeout(function(){
-                                window.close();
+                                $('#share-modal').hide();
+                                $('#share-modal').find('.pre').show().next().hide();
+                                $('#facebook-btn').addClass('disabled');
+                                $('#share-btn').removeClass('disabled');
                             },2500);
                         }
                     })
@@ -418,7 +387,9 @@ $(document).ready(function(){
                              fbShared = true;
                             $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
                             setTimeout(function(){
-                               window.close();
+                                $('#share-modal').hide();
+                                $('#facebook-btn').addClass('disabled');
+                                $('#share-btn').removeClass('disabled');
                             },2500);
                         }
                     })
@@ -431,3 +402,33 @@ $(document).ready(function(){
         $('#share-modal').hide();
     })
 });
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function setCookie(cname, cvalue) {
+    var d = new Date();
+    d.setTime(d.getTime() + (60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}

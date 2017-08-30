@@ -13,39 +13,28 @@ var gzip = require('gulp-gzip');
 
 
 gulp.task('default', ['watch']);
+gulp.task('minify-css', function(){
+  return gulp.src('src/css/*.css')
+    
+    .pipe(rename({suffix:'.min'}))
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest('dist/css'))
+})
 gulp.task('compileLess', function(cb){
-	return gulp.src(['less/*.less','!dist/css/*.gz'])
-	  .pipe(sourcemaps.init())
+	return gulp.src(['less/*.less'])
 	  .pipe(less())
-	  .pipe(gulp.dest('dist/css'))
-	  .pipe(rename({suffix:'.min'}))
-	  .pipe(cleanCSS({compatibility: 'ie8'}))
-	  .pipe(sourcemaps.write('maps'))
-	  .pipe(gulp.dest('dist/css'));
+	  .pipe(gulp.dest('src/css'))
 });
 gulp.task('gzip', function(){
-  return gulp.src(['dist/**/*.*','!dist/**/*.gz','!dist/**/*.less'])
+  return gulp.src(['dist/**/*.*','!dist/img/*','!dist/**/*.gz','!dist/**/*.less'])
   .pipe(gzip())
   .pipe(gulp.dest('dist/'))
 })
-// gulp.task("index", function(cb){
-//   var jsFilter = filter("**/*.js", { restore: true });
-//   var cssFilter = filter("**/*.css", { restore: true });
-//   return gulp.src("src/index.html")
-//   .pipe(jsFilter)
-//   .pipe(cssFilter)
-// })
-// gulp.task("revreplace", ["revision"], function(){
-//   var manifest = gulp.src("./" + opt.distFolder + "/rev-manifest.json");
 
-//   return gulp.src(opt.srcFolder + "/index.html")
-//     .pipe(revReplace({manifest: manifest}))
-//     .pipe(gulp.dest(opt.distFolder));
-// });
 gulp.task('minify-js', function (cb) {
   pump([
   		  sourcemaps.init(),
-        gulp.src(['src/js/*.js','!dist/js/*.gz']),
+        gulp.src(['src/js/*.js']),
         gulp.dest('dist/js'),
         uglify(),
         rename({suffix:'.min'}),
@@ -60,4 +49,8 @@ gulp.task('watch', function() {
   gulp.watch('src/img/*', ['imgmin']);
   gulp.watch('src/js/*', ['minify-js','gzip']);
   gulp.watch('less/*', ['compileLess','gzip']);
+  gulp.watch('src/css/*.css', ['minify-css']);
 });
+gulp.task('build', function(){
+
+})
