@@ -70,12 +70,7 @@ $(document).ready(function(){
             $('#facebook-btn').attr('data-url',session.aws);
             $('#twitter-btn').attr('data-url',session.url);
         }
-        // if(session.shareModal=='true'){
-        //     $('#share-modal').show().find('#share-btn').addClass('twitter');
-        //     //$('#instagram-btn').find('a').attr('href', aws);
-        //     $('#facebook-btn').attr('data-url', session.aws);
-        //     $('#twitter-btn').attr('data-url', session.url);
-        // }
+        
     });
    
     var chosenColor = 'steel';
@@ -240,7 +235,7 @@ $(document).ready(function(){
                                 $('#preview-overlay').css({width:100+'%'})
                             }else{
                                 $('#preview').find('video').addClass('portrait');
-                               // $('#preview-overlay').css({width:$('#preview').find('video').width()})
+                                $('#preview-overlay').css({width:$('#preview').find('video').width()})
                             }
                             $('.options').css({left:($('#preview').width()-$('#preview').find('video').width())/2});
                         }
@@ -309,49 +304,13 @@ $(document).ready(function(){
     $('#facebook-btn').on('click', function(e){
         e.preventDefault();e.stopPropagation();
         var fbWindow = window.open('https://strengthdefinesus.com/shareWindow?mode=facebook&aws='+$('#facebook-btn').attr('data-url')+'&url='+$('#facebook-btn').attr('data-url')+'&type='+session.type,'shareWindow','location=0,status=0,width=800,height=600');
-        // if(FB){
-        //     FB.getLoginStatus(function(res){
-        //         statusChangeCallback(res);
-        //     });
-        // }  
     });
-    // function statusChangeCallback(res){
-    //     console.log(res);
-    //     if(res.status == 'connected') {
-    //         $('#share-modal').show().find('h2').html('Share to Facebook');
-    //         $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
-    //     }else {
-    //         console.log('test');
-    //         if(session.mobile == "true"){
-    //             location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/dev&response_type=token&scope=publish_actions,user_videos,user_photos"
-    //         }else{
-    //             FB.login(function(res){
-    //                 console.log(res);
-    //                 if(res.status == 'connected'){
-    //                     $('#share-modal').show().find('h2').html('Share to Facebook');
-    //                     $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
-    //                 }
-    //             }, {scope:'public_profile, user_videos,user_photos,publish_actions'});
-    //         }
-    //     }
-    // }
+   
     //Authorizes and Logs in User
     $('#twitter-btn').on('click', function(e){
         e.preventDefault();e.stopPropagation();
-       // if(!session.at){
-            // $.post('https://strengthdefinesus.com/authTwitter', {url:$(this).attr('data-url'), session_token:session_token})
-            // .done(function(data){
-             //  var twitWindow = window.open('https://twitter.com/oauth/authenticate?oauth_token='+data.requestToken+'&token='+session_token,'shareWindow','location=0,status=0,width=800,height=400');
-             var twitWindow = window.open('https://strengthdefinesus.com/twtAuth?url='+$('#twitter-btn').attr('data-url')+'&type='+session.type,'shareWindow','location=0,status=0,width=800,height=400');
-           // });
-       //}else{
-        //     $('#share-modal').show().find('h2').html('Share to Twitter');
-        //     $('#share-btn').html('SHARE').removeClass('facebook').addClass('twitter');
-        //}
-        
-        // $.oauthpopup({path:'https://strengthdefinesus.com/authTwitter',callback: function(data){
-        //     console.log(data);
-        // }});
+        var twitWindow = window.open('https://strengthdefinesus.com/twtAuth?url='+$('#twitter-btn').attr('data-url')+'&type='+session.type,'shareWindow','location=0,status=0,width=800,height=400');
+      
     });
     //Actually shares the video or image to twitter
    $('#share-btn').on(event, function(e){
