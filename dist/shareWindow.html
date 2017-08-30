@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" property="og:description" content="Strength Defines Us Video and Image Generator"/>
+<title>Strength Defines Us</title>
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+<meta property="og:title" content="Strength Defines Us Generator"/>
+<meta property="og:url" content="https:/strengthdefinesus.com"/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="https://strengthdefinesus.com/img/STR_ICON_BUTTON.png" />
+<meta property="fb:app_id" content="1956267324660722"/>
+
+<style>
+html,body{
+  height: 100%;
+}
+#share-modal {
+  	position: relative;
+    background: #fff;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100% - 80px);
+    left: 0;
+    transform: none;
+    top: 0;
+    padding: 40px 0;
+    border: none;
+    display: block;
+    box-shadow: none;
+    z-index: 3;
+}
+#share-modal .post {
+  display: none;
+  width: 90%;
+  margin:0 auto;
+}
+#share-modal .pre {
+  width: 90%;
+  margin:0 auto;
+}
+#share-modal .post h3 {
+  text-align: center;
+  margin: 0;
+}
+#share-modal .post p {
+  text-align: center;
+}
+#share-modal h2 {
+  text-align: center;
+  margin-top: 0;
+}
+#share-modal textarea {
+  text-align: left;
+  width: calc(100% - 18px);
+  font-size: 16px;
+  resize: none;
+  line-height: 20px;
+  padding: 8px;
+  margin-bottom: 5px;
+  display: block;
+  outline: 1px solid;
+  margin-top: 5px;
+}
+#share-modal textarea:focus {
+  outline: 0;
+  border-color: #1da1f2;
+  box-shadow: inset 0 0 0 1px rgba(0, 132, 180, 0.7);
+}
+#share-modal .close-btn {
+  position: absolute;
+  top: 0px;
+  right: 3px;
+  cursor: pointer;
+  transform: rotate(45deg);
+  font-size: 35px;
+  font-family: sans-serif;
+  width: 10px;
+  height: 10px;
+}
+#share-modal #share-btn {
+  float: right;
+  color: #fff;
+  background-color: #1da1f2;
+  border: 1px solid #1da1f2;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+  position: relative;
+}
+#share-modal #share-btn .share-spinner {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: 36px;
+  display: none;
+}
+</style>
+</head>
+<body>
+<div id="share-modal">
+	<div class="pre">
+		<h2>Share to Twitter</h2>
+		
+		<form class="clear">
+			<label for="share-status">Caption your post:</label>
+			<textarea name="share-status" maxLength="140">Strength Defines Us #strongermovie
+			</textarea>
+			<div id="share-btn" class="twitter">
+				<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>
+				SHARE
+			</div>
+			<div class="share-error"></div>
+		</form>
+	</div>
+	<div class="post">
+		<h3>Tweet Posted!</h3>
+	</div>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script>
+
+var session = {
+	url:'<%= url %>',
+	type:'<%= type %>',
+	videoW:'<%= videoW %>',
+	videoH:'<%= videoH %>',
+	shareModal:'<%=  shareModal %>',
+	at:'<%= at %>',
+	aws:'<%= aws %>',
+	mobile:'<%= mobile %>',
+	portrait:'<%= portrait %>',
+  mode:'<%= mode %>'
+}
+</script>
+<script>
+var fileReady = false;
+var twtShared = false;
+var fbShared = false;
+if(session.mode == 'facebook' || location.search.indexOf('response_type') != -1){
+  $('#share-modal').find('h2').html('Share to Facebook');
+  $('#share-btn').html('<img class="share-spinner" src="img/spinner.svg" alt="Processing">SHARE TO FACEBOOK').removeClass('twitter').addClass('facebook');
+  $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+      FB.init({
+        appId: '1956267324660722',
+        version: 'v2.10'
+      });
+
+      FB.getLoginStatus(function(res){
+          statusChangeCallback(res);
+      });   
+  });
+  function statusChangeCallback(res){
+        console.log(res);
+        if(res.status == 'connected') {
+            //$('#share-modal').show().find('h2').html('Share to Facebook');
+           // $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
+        }else {
+            console.log('test');
+           
+                location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/shareWindow?response_type=token&scope=publish_actions,user_videos,user_photos"
+        }
+    }
+
+}else{
+
+}
+    
+var event = (session.mobile=='true') ? 'touchstart':'click';
+$('#share-btn').on(event, function(e){
+  e.preventDefault();
+  $('.share-spinner').show();
+  $('#share-btn').addClass('disabled');
+  if($(this).hasClass('twitter')) {
+    if(!twtShared) {
+        twtShared = true;
+        $.ajax({
+            url:'https://strengthdefinesus.com/postToTwitter', 
+            type:'POST', 
+            data:{
+              status:$('#share-modal').find('textarea').val(),
+              url:(session.url.indexOf('https://strengthdefinesus.com/') != -1) ? session.url.split('https://strengthdefinesus.com/')[1]:session.url,
+              type:session.type
+            }
+        }).done(function(data){
+          console.log(data);
+          if(data.status=='success'){
+            $('#share-modal').find('.pre').hide().next().show();
+            $('#twitter-btn').addClass('disabled');
+            setTimeout(function(){
+              window.close();       
+            },1500);
+          }else{
+            twtShared = false;
+             $('#share-modal').find('.pre').hide().next().html('<h2>There was an error:</h2><p>'+data.errors+'</p>').show();
+          }
+      });
+    }
+  }else if($(this).hasClass('facebook')){
+    if(!fbShared){
+      fbShared = true;
+      if(session.type == 'video' || session.url.indexOf('.gif') != -1) {
+          FB.api('/me/videos', 'post', {
+              file_url:session.aws,
+              description:$('#share-modal').find('textarea').val(),
+              title:'Strength Defines Us #strongermovie',
+          }, function(res, err){
+              console.log(res, err)
+              $('.share-spinner').hide();
+              if(err){
+                  console.log(err);
+                  fbShared = false;
+                  $('#share-btn').removeClass('disabled');
+                  $('#share-modal').find('.pre').hide().next().html('<h3>There was an error:</h3><p>'+data.err.code+'</p>').show();
+              }else{
+                  fbShared = true;
+                  $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
+                  setTimeout(function(){
+                   window.close();
+                     
+                  },2500);
+              }
+          })
+      }else if(session.type=='image' && session.url.indexOf('.gif') == -1){
+       FB.api('/me/photos', 'post', {
+          caption:$('#share-modal').find('textarea').val(),
+          url:session.aws
+      }, function(res,err){
+          $('.share-spinner').hide();
+          console.log(res, err)
+          if(err){
+              console.log(err);
+              fbShared = false;
+              $('#share-btn').removeClass('disabled');
+              $('#share-modal').find('.pre').hide().next().html('<h3>There was an error:</h3><p>'+err.message+'</p>').show();
+          }else{
+               fbShared = true;
+              $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
+              setTimeout(function(){
+                  window.close();
+      
+              },2500);
+          }
+        })
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

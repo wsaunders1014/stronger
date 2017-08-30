@@ -24,9 +24,9 @@ gulp.task('compileLess', function(cb){
 	  .pipe(gulp.dest('dist/css'));
 });
 gulp.task('gzip', function(){
-  return gulp.src(['dist/**/*','!dist/**/*.gz'])
+  return gulp.src(['dist/**/*.*','!dist/**/*.gz','!dist/**/*.less'])
   .pipe(gzip())
-  .pipe(gulp.dest('dist'))
+  .pipe(gulp.dest('dist/'))
 })
 // gulp.task("index", function(cb){
 //   var jsFilter = filter("**/*.js", { restore: true });
@@ -45,7 +45,7 @@ gulp.task('gzip', function(){
 gulp.task('minify-js', function (cb) {
   pump([
   		  sourcemaps.init(),
-        gulp.src(['src/js/*.js','dist/js/*.gz']),
+        gulp.src(['src/js/*.js','!dist/js/*.gz']),
         gulp.dest('dist/js'),
         uglify(),
         rename({suffix:'.min'}),

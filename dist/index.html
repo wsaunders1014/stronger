@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" property="og:description" content="Strength Defines Us Video and Image Generator"/>
 <title>Strength Defines Us</title>
-<link rel="stylesheet" type="text/css" href="css/style.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
 <meta property="og:title" content="Strength Defines Us Generator"/>
 <meta property="og:url" content="https:/strengthdefinesus.com"/>
 <meta property="og:type" content="website"/>
@@ -99,6 +99,8 @@
 	<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | <a href="http://roadsideattractions.com/wp-content/uploads/2017/05/PrivacyPolicy-051817.pdf">Privacy Policy</a></div>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script>
+		console.log(window.self);
+		console.log(window.top);
 		var session = {
 			url:'<%= url %>',
 			type:'<%= type %>',
@@ -111,6 +113,6 @@
 			portrait:'<%= portrait %>',
 		}
 	</script>
-	<script type="text/javascript" src="js/scripts.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
 </body>
 </html>
