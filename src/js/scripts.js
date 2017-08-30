@@ -74,12 +74,12 @@ $(document).ready(function(){
         $('#facebook-btn').attr('data-url',session.aws);
         $('#twitter-btn').attr('data-url',session.url);
     }
-    if(session.shareModal=='true'){
-        $('#share-modal').show().find('#share-btn').addClass('twitter');
-        //$('#instagram-btn').find('a').attr('href', aws);
-        $('#facebook-btn').attr('data-url', session.aws);
-        $('#twitter-btn').attr('data-url', session.url);
-    }
+    // if(session.shareModal=='true'){
+    //     $('#share-modal').show().find('#share-btn').addClass('twitter');
+    //     //$('#instagram-btn').find('a').attr('href', aws);
+    //     $('#facebook-btn').attr('data-url', session.aws);
+    //     $('#twitter-btn').attr('data-url', session.url);
+    // }
     $('.square').on('click touchstart tap', function(e){
         e.preventDefault();e.stopPropagation();
         var id= $(this).attr('id');
@@ -187,6 +187,9 @@ $(document).ready(function(){
                 $('#share').show();
                  
                 //Add S3 url to download button
+                session.aws = data.aws_url;
+                session.url = data.server_url;
+                session.type = data.type;
                 $('#instagram-btn').find('a').attr('href', data.aws_url);
                 $('#facebook-btn').attr('data-url',data.aws_url);
                 $('#twitter-btn').attr('data-url', data.server_url);
@@ -251,14 +254,15 @@ $(document).ready(function(){
                        if(img.width < 300 || img.height < 300){
                             $('.error').html('Image size must be at least 300 x 300 pixels.');
                        }else{
-                            if(img.height <= img.width*0.5625){
+                            if(img.height < img.width*0.5625){
                                 //landscape
 
                                 img.setAttribute('class','landscape');
                        
                             }else{
                                 //portrait or square
-                                  img.setAttribute('class','portrait');
+                                 img.setAttribute('class','portrait');
+                                //alert(img.width, $('#preview-overlay').width())
                                 $('#preview-overlay').css({width:img.width})
                                 $('.options').css({left:($('#preview').width()-img.width)/2});
                             }
@@ -315,7 +319,7 @@ $(document).ready(function(){
         }else {
             console.log('test');
             if(session.mobile == "true"){
-                location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/dev&response_type=token&scope=publish_actions,user_videos,user_photos"
+                location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/&response_type=token&scope=publish_actions,user_videos,user_photos"
             }else{
                 FB.login(function(res){
                     console.log(res);
@@ -330,15 +334,15 @@ $(document).ready(function(){
     //Authorizes and Logs in User
     $('#twitter-btn').on(event, function(e){
         e.preventDefault();e.stopPropagation();
-        if(!session.at){
+        //if(!session.at){
             $.post('/authTwitter', {url:$(this).attr('data-url')})
             .done(function(data){
-                location.href = 'https://twitter.com/oauth/authenticate?oauth_token='+data.requestToken;
+                var twitWindow = window.open('https://twitter.com/oauth/authenticate?oauth_token='+data.requestToken,'shareWindow','location=0,status=0,width=800,height=400');
             });
-        }else{
-             $('#share-modal').show().find('h2').html('Share to Twitter');
-             $('#share-btn').html('SHARE').removeClass('facebook').addClass('twitter');
-        }
+        // }else{
+        //      $('#share-modal').show().find('h2').html('Share to Twitter');
+        //      $('#share-btn').html('SHARE').removeClass('facebook').addClass('twitter');
+        // }
         
 
     });
@@ -394,10 +398,7 @@ $(document).ready(function(){
                             fbShared = true;
                             $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
                             setTimeout(function(){
-                                $('#share-modal').hide();
-                                $('#share-modal').find('.pre').show().next().hide();
-                                $('#facebook-btn').addClass('disabled');
-                                $('#share-btn').removeClass('disabled');
+                                window.close();
                             },2500);
                         }
                     })
@@ -417,9 +418,7 @@ $(document).ready(function(){
                              fbShared = true;
                             $('#share-modal').find('.pre').hide().next().html('<h3>Posted to Facebook.</h3><p>For videos, please allow up to a few minutes for it to show.</p>').show();
                             setTimeout(function(){
-                                $('#share-modal').hide();
-                                $('#facebook-btn').addClass('disabled');
-                                $('#share-btn').removeClass('disabled');
+                               window.close();
                             },2500);
                         }
                     })
