@@ -49,7 +49,7 @@ body {
 #str-wrapper {
   width: 100%;
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 10px;
   overflow: hidden;
   background: #e5e3dd;
   margin: 0;
@@ -62,20 +62,19 @@ body {
   float: left;
   padding: 78px 1.5% 40px 5%;
 }
-#str-wrapper .left-side .quote {
-  font-size: 22px;
-  text-align: right;
-}
+
 #str-wrapper .right-side {
-  width: 47%;
-  float: left;
-  padding: 40px 5% 40px 2%;
+  float: none;
+  width: 90%;
+  padding:0;
+  margin:0 auto;
+  max-width: 1170px;
 }
 #str-wrapper #preview-container {
   clear: both;
   position: relative;
   height: 0;
-  padding-top: 59.95%;
+  padding-top: calc(56.25% + 33px);
 }
 #str-wrapper #preview-container .options {
   visibility: hidden;
@@ -156,6 +155,7 @@ body {
 #preview-container .landscape {
   width: 100%;
   height: auto;
+
 }
 #str-wrapper .padding-clear {
   position: absolute;
@@ -171,37 +171,45 @@ body {
   right: 100%;
 }
 #str-wrapper #instruct {
-  text-align: right;
+  text-align: center;
+  margin-bottom: 10px;
   padding: 0 5%;
   font-size: 27px;
 }
 #str-wrapper #instruct h2 {
-  font-family: 'ProximaNova-Bold', sans-serif;
+  font-family: 'ProximaNova-Bold', sans-serif !important;
   margin: 0;
   font-size: 50px;
   line-height: 0.8em;
+  color: #000 !important;
 }
-#instruct p {
-  margin-top: 12px;
+#str-wrapper #instruct p {
+  margin-top: 23px;
+  font-size: 0.7em;
 }
 #create {
   position: relative;
   margin-top: 20px;
 }
-#create #save-btn {
-  display: none;
-}
-#create .button {
+
+#str-wrapper #create .button {
   display: inline-block;
   cursor: pointer;
   position: relative;
-  width: 208px;
-  background: #162e84;
-  text-align: center;
-  color: #fff;
-  border-radius: 6px;
-  padding: 15px 0 11px;
-  font-family: 'AK';
+  background: #244199;
+  padding: 10px 0px;
+  border-radius: 40px;
+  font-size: 20px;
+  line-height: 20px;
+  font-family: 'Arial';
+  font-weight: 200;
+  width: 190px;
+}
+#str-wrapper #create .button:hover {
+  background: #000;
+}
+#str-wrapper #create #save-btn {
+  display: none;
 }
 #create #create-btn.disabled {
   opacity: 0.3;
@@ -225,7 +233,7 @@ body {
 }
 #create .error {
   position: absolute;
-  top: 101%;
+  top: 108%;
   width: 100%;
   right: 0;
   font-size: 14px;
@@ -242,7 +250,11 @@ body {
 #str-wrapper .rules {
   position: absolute;
   bottom: 126%;
-  width: 202%;
+  left: 50%;
+  transform: translateX(-50%);
+  right: initial;
+  font-weight: 400;
+  width: 207%;
   right: 0;
   background: #fff;
   padding: 10%;
@@ -257,7 +269,7 @@ body {
 #str-wrapper .rules:after,
 #str-wrapper  .rules:before {
   top: 100%;
-  left: 96%;
+  left: 55%;
   border: solid transparent;
   content: " ";
   height: 0;
@@ -279,16 +291,16 @@ body {
 }
 #str-wrapper  #share {
   display: none;
-  float: right;
+  float: none;
   margin-top: 20px;
 }
-#str-wrapper  #share > div {
-  float: right;
-  width: 18.5%;
-  cursor: pointer;
-  margin-top: 7px;
-  margin-left: 7px;
-  position: relative;
+#str-wrapper #share > div {
+  float: none;
+  display: inline-block;
+  width: 23.5%;
+  margin-left: 0;
+  max-width: 170px;
+  min-width: 140px;
 }
 #str-wrapper #share > div#twitter-btn {
   clear: both;
@@ -317,25 +329,16 @@ body {
   clear: both;
   display: table;
 }
-#title-treatment {
-  width: 100%;
-  height: 0;
-  padding-bottom: 27%;
-  background: url(../img/tt.png) no-repeat;
-  background-size: 100%;
-  float: right;
-  margin-top: 41px;
-  position: relative;
-}
 #str-wrapper  .copy {
-  text-align: right;
+  text-align: center;
   font-size: 10px;
   color: #232323;
   font-family: 'arial';
-  position: absolute;
-  right: 5%;
-  width: 90%;
-  padding-top: 25px;
+  position: relative;
+  right: 0;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 18px;
 }
 #str-wrapper  .copy a {
   color: inherit;
@@ -418,6 +421,7 @@ body {
 }
 #str-wrapper  .disabled {
   opacity: 0.5;
+  pointer-events: none;
 }
 #str-wrapper  .desktop {
   display: block;
@@ -457,12 +461,12 @@ body {
     width: calc(50% - 7px);
     margin-top: 2px;
   }
- #str-wrapper  #share > div a {
+ #str-wrapper #share > div a {
     display: block;
     height: 100%;
   }
-  #share #instagram-btn {
-    position: absolute;
+  #str-wrapper #share #instagram-btn {
+    position: relative;
     top: 0;
     margin-top: 0;
   }
@@ -471,7 +475,8 @@ body {
     font-size: 22px;
   }
   #str-wrapper  #instruct h2 {
-    font-size: 1.9em;
+    font-size: 1.4em;
+    color: #000 !important;
   }
   #str-wrapper #instruct label {
     margin-top: 20px;
@@ -483,11 +488,14 @@ body {
   }
   #str-wrapper .copy {
     text-align: center;
+    position: relative;
+    right: 0;
+    width: 100%;
+    padding-top: 15px;
   }
 }
 @media screen and (max-width: 414px) {
-  #wrapper {
-    padding-top: 5px;
+  #str-wrapper {
   }
   #create {
     margin-top: 7px;
@@ -502,40 +510,37 @@ body {
   #instruct label {
     margin-top: 6px;
   }
-  #title-treatment {
+  #str-wrapper #title-treatment {
     margin: 5px auto 0;
     padding-bottom: 23%;
     width: 80%;
   }
-  #preview-container {
+  #str-wrapper #preview-container {
     height: auto;
     padding-top: 0;
   }
-  #preview-container .padding-clear {
+  #str-wrapper #preview-container .padding-clear {
     position: relative;
     width: auto;
     height: auto;
   }
-  #preview-container #preview-overlay {
+  #str-wrapper #preview-container #preview-overlay {
     position: absolute;
     width: 100%;
     top: 33px;
     height: calc(100% - 33px);
   }
-  #preview-container .landscape {
+  #str-wrapper #preview-container .landscape {
     width: 100%;
     height: auto;
   }
-  #preview-container .portrait {
+  #str-wrapper #preview-container .portrait {
     width: 100%;
   }
-  .left-side .quote {
-    font-size: 15.4px;
-    margin-top: 9px;
+  #str-wrapper .options{
+   
   }
-  .rules {
+  #str-wrapper .rules {
     width: 315px;
-    right: -10px;
   }
 }
-#str-wrapper {max-width: 1280px;overflow-x:hidden;}#instruct {text-align: center;}#instruct p {margin-top: 23px;}.right-side {float: none;width: 90%;padding:0px 5%;}#create .button {background: #244199;padding: 10px 10px;border-radius: 40px;font-size: 20px;line-height: 20px;font-family: "Arial";font-weight: 700;}#share {float: none;}#share > div {float: none;display: inline-block;width: 23.5%;margin-left: 0;max-width: 210px;min-width: 165px;}.rules{left: -66%;right: initial;font-weight: 400;width: 207%;}.rules:after, .rules:before {left: 55%;}.copy {text-align: center;}@media screen and (max-width: 800px){#share #instagram-btn {position: relative;}}@media screen and (max-width: 414px){.rules{max-width: 315px;left: -30%;}}

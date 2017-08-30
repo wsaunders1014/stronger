@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" property="og:description" content="Strength Defines Us Video and Image Generator"/>
 <title>Strength Defines Us</title>
-<link rel="stylesheet" type="text/css" href="css/style.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="css/style.min.css"> -->
 <meta property="og:title" content="Strength Defines Us Generator"/>
 <meta property="og:url" content="https:/strengthdefinesus.com"/>
 <meta property="og:type" content="website"/>
@@ -14,6 +14,19 @@
 <style>
 html,body{
   height: 100%;
+}
+body{
+  background: #e5e3dd;
+  margin: 0;
+  font-family: 'ProximaNova-Regular', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@font-face {
+  font-family: 'ProximaNova-Regular';
+  src: url('../font/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'), url('../font/ProximaNova-Regular.otf') format('opentype'), url('../font/ProximaNova-Regular.woff') format('woff'), url('../font/ProximaNova-Regular.ttf') format('truetype'), url('../font/ProximaNova-Regular.svg#ProximaNova-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 #share-modal {
   	position: relative;
@@ -29,6 +42,7 @@ html,body{
     display: block;
     box-shadow: none;
     z-index: 3;
+   font-family: 'ProximaNova-Regular';
 }
 #share-modal .post {
   display: none;
@@ -61,35 +75,24 @@ html,body{
   display: block;
   outline: 1px solid;
   margin-top: 5px;
+  height: 120px;
 }
 #share-modal textarea:focus {
   outline: 0;
   border-color: #1da1f2;
   box-shadow: inset 0 0 0 1px rgba(0, 132, 180, 0.7);
 }
-#share-modal .close-btn {
-  position: absolute;
-  top: 0px;
-  right: 3px;
-  cursor: pointer;
-  transform: rotate(45deg);
-  font-size: 35px;
-  font-family: sans-serif;
-  width: 10px;
-  height: 10px;
-}
 #share-modal #share-btn {
   float: right;
   color: #fff;
   background-color: #1da1f2;
-  border: 1px solid #1da1f2;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
   font-size: 14px;
   font-weight: bold;
   padding: 8px 16px;
   border-radius: 18px;
   cursor: pointer;
   position: relative;
+  margin-top: 10px;
 }
 #share-modal #share-btn .share-spinner {
   position: absolute;
@@ -97,6 +100,10 @@ html,body{
   top: 0;
   width: 36px;
   display: none;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 </style>
 </head>
@@ -110,7 +117,7 @@ html,body{
 			<textarea name="share-status" maxLength="140">Strength Defines Us #strongermovie
 			</textarea>
 			<div id="share-btn" class="twitter">
-				<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>
+				<img class="share-spinner" src="img/Spinner.gif" alt="Processing"/>
 				SHARE
 			</div>
 			<div class="share-error"></div>
@@ -155,10 +162,7 @@ if(session.mode == 'facebook' || location.search.indexOf('response_type') != -1)
   });
   function statusChangeCallback(res){
         console.log(res);
-        if(res.status == 'connected') {
-            //$('#share-modal').show().find('h2').html('Share to Facebook');
-           // $('#share-btn').html('SHARE TO FACEBOOK<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>').removeClass('twitter').addClass('facebook');
-        }else {
+        if(res.status != 'connected') {
             console.log('test');
            
                 location.href="https://www.facebook.com/v2.10/dialog/oauth?client_id=1956267324660722&redirect_uri=https://strengthdefinesus.com/shareWindow?response_type=token&scope=publish_actions,user_videos,user_photos"
@@ -170,7 +174,7 @@ if(session.mode == 'facebook' || location.search.indexOf('response_type') != -1)
 }
     
 var event = (session.mobile=='true') ? 'touchstart':'click';
-$('#share-btn').on(event, function(e){
+$('#share-btn').on('click', function(e){
   e.preventDefault();
   $('.share-spinner').show();
   $('#share-btn').addClass('disabled');

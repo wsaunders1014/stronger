@@ -54,25 +54,11 @@
     }
     var session_token = getCookie('session_token');
     console.log('st: '+session_token)
-       var $container = $('#widget-container');
-     //  $.ajax('https://strengthdefinesus.com/js/widget-data.js?callback=?', {dataType:'jsonp', jsonpCallback:'callback'}).success(function(data){
-     //    console.log(data)
-     //    $container.html(data.html);
-     //      $.ajaxSetup({ cache: true });
-     //      $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
-     //          FB.init({
-     //            appId: '1956267324660722',
-     //            version: 'v2.10'
-     //          });     
-     //      });
-     //      var chosenColor = 'steel';
-     //      var event = (session.mobile=='true') ? 'touchstart':'click';
-     //  });
+    var $container = $('#widget-container');
      $.get('https://strengthdefinesus.com/widget.html?session_token='+session_token).done(function(data){
         //console.log(data);
         $container.html(data);
      });
    });
-
 }
 })();
