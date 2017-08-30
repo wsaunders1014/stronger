@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" property="og:description" content="Strength Defines Us Video and Image Generator"/>
+<title>Strength Defines Us</title>
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+<meta property="og:title" content="Strength Defines Us Generator"/>
+<meta property="og:url" content="https:/strengthdefinesus.com"/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="https://strengthdefinesus.com/img/STR_ICON_BUTTON.png" />
+<meta property="fb:app_id" content="1956267324660722"/>
+<style>
+	#wrapper {
+		max-width: 1280px;
+		overflow-x:hidden;
+	}
+	#instruct {
+		text-align: center;
+	}
+	#instruct p {
+		margin-top: 23px;
+	}
+	.right-side {
+		float: none;
+	    width: 90%;
+	    padding:0px 5%;
+	}
+	#create .button {
+		background: #244199;
+	    padding: 10px 10px;
+	    border-radius: 40px;
+	    font-size: 20px;
+	    line-height: 20px;
+	    font-family: 'Arial';
+	    font-weight: 700;
+	}
+	#share {
+		float: none;
+	}
+	#share > div {
+		float: none;
+		display: inline-block;
+		width: 23.5%;
+		margin-left: 0;
+		max-width: 210px;
+		min-width: 165px;
+	}
+	.rules{
+	    left: -66%;
+	    right: initial;
+	    font-weight: 400;
+	   	width: 207%;
+
+	}
+	.rules:after, .rules:before {
+		left: 55%;
+	}
+	.copy {
+		text-align: center;
+	}
+@media screen and (max-width: 800px){
+	#share #instagram-btn {
+		position: relative;
+	}
+}
+@media screen and (max-width: 414px){
+	.rules{
+		max-width: 315px;
+		left: -30%;
+	}
+}
+</style>
+</head>
+<body>
+	<div id="wrapper" class="clear">
+		<div id="instruct" class="clear">
+			<H2>CREATE YOUR STORY OF INSPIRATION</H2>
+			<p>Add <i>Stronger</i>’s <span class="nowrap">STRENGTH DEFINES US</span> filter to your photos and videos and inspire others by sharing on Facebook, <span class="nowrap">Twitter, and Instagram.</span>
+			
+			</p> 
+			<div id="create">
+				<form id="video-upload" action="/upload" method="post" enctype="multipart/form-data" class="clear">
+					<div class="button" id="save-btn">
+						<progress value="0"></progress>
+						<img id="spinner" src="img/spinner.svg" alt="Processing"/>
+						SAVE
+					</div>
+					<label class="button" id="create-btn" for="video">
+						<input type="file" name="video" id="video"/>
+						<div class="rules">
+							Accepted file formats: .gif, .jpg, .png, .mp4, .avi, .mov. Images must be at least 300 x 300 pixels. Videos must be under 100mb. Only first 30 seconds will be rendered for video.
+						</div>
+						<span>CREATE</span>
+						
+						
+					</label>
+					<div class="error"></div>
+				</form>
+			</div>
+			<div id="share">
+				<div id="restart-btn">
+					<img src="img/restart-btn.png" alt="Restart Process">
+				</div>
+				<div id="twitter-btn"><img src="img/twitter-btn.png" alt="Share on Twitter"></div>
+				<div id="facebook-btn"><img src="img/facebook-btn.png" alt="Share on Facebook"></div>
+				<div id="instagram-btn">
+					<a href="/download" download="StrengthDefinesUs"><img src="img/instagram-btn.png" alt="Download for instagram"/></a>
+				</div>
+			</div>
+		</div>
+		<div class="clear">
+			<div class="right-side">
+				<div id="preview-container">
+					<div class="padding-clear">
+						<div class="options">
+							Choose Filter:
+							<div class="square active" id="steel"></div>
+							<div class="square" id="black"></div>
+							<div class="square" id="white"></div>
+						</div>
+						<div id="preview">
+								<video class="landscape" preload autoplay playsinline muted loop webkit-playsinline>
+									<source src="media/preview.mp4" type="video/mp4"/>
+								</video>
+						</div>
+						<div id="preview-overlay"><img class="upper" src="img/overlay_text.png"/><img class="lower" src="img/overlay_hashtag.png"/></div>
+					</div>
+				</div>
+			</div><!--END RIGHT-SIDE -->
+		</div>
+	</div> <!-- END WRAPPER -->
+	<div id="share-modal">
+		<div class="close-btn">+</div>
+		<div class="pre">
+			<h2>Share to Twitter</h2>
+			
+			<form class="clear">
+				<label for="share-status">Caption your post:</label>
+				<textarea name="share-status" maxLength="140">Strength Defines Us #strongermovie
+				</textarea>
+				<div id="share-btn">
+					<img class="share-spinner" src="img/spinner.svg" alt="Processing"/>
+					SHARE
+				</div>
+				<div class="share-error"></div>
+			</form>
+		</div>
+		<div class="post">
+			<h3>Tweet Posted!</h3>
+		</div>
+	</div>
+	<div class="copy">&copy; 2017 Roadside Attractions. All rights reserved | <a href="http://roadsideattractions.com/wp-content/uploads/2017/05/PrivacyPolicy-051817.pdf">Privacy Policy</a></div>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script>
+		var session = {
+			url:'<%= url %>',
+			type:'<%= type %>',
+			videoW:'<%= videoW %>',
+			videoH:'<%= videoH %>',
+			shareModal:'<%=  shareModal %>',
+			at:'<%= at %>',
+			aws:'<%= aws %>',
+			mobile:'<%= mobile %>',
+			portrait:'<%= portrait %>',
+		}
+	</script>
+	<script type="text/javascript" src="js/scripts.min.js"></script>
+</body>
+</html>

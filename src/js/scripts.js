@@ -3,7 +3,11 @@
     var fbShared = false;
 $(document).ready(function(){
     //LOAD FB SDK
-
+    if(window.self == window.top){
+        console.log('parent')
+    }else{
+        console.log('iframe')
+    }
     $.ajaxSetup({ cache: true });
     $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
         FB.init({
@@ -47,6 +51,21 @@ $(document).ready(function(){
                     //portrait or square
                       img.setAttribute('class','portrait');
                 }
+            }
+            img.onerror = function(){
+                resetUpload();
+                   var vid = document.createElement('VIDEO');
+                    vid.setAttribute('controls','controls');
+                    vid.setAttribute('autoplay','autoplay');
+                    vid.setAttribute('muted','muted');
+                    vid.setAttribute('loop','loop');
+                    vid.setAttribute('playsinline','true');
+                    vid.setAttribute('class','landscape');
+                    vid.setAttribute('src','media/preview.mp4');
+                    $('#preview').html('').append(vid);
+                    vid.load();
+                    vid.play();
+
             }
             img.src = session.url;
             $('#preview').html('').append(img);
