@@ -258,12 +258,13 @@ $(document).ready(function(){
                                 //landscape
 
                                 img.setAttribute('class','landscape');
-                       
+                                $('#preview-overlay').css({height:img.height})
                             }else{
                                 //portrait or square
                                  img.setAttribute('class','portrait');
                                 //alert(img.width, $('#preview-overlay').width())
                                 $('#preview-overlay').css({width:img.width})
+                                $('#preview-overlay').css({height:img.height})
                                 $('.options').css({left:($('#preview').width()-img.width)/2});
                             }
                         }
@@ -358,7 +359,7 @@ $(document).ready(function(){
                     url:'/postToTwitter', 
                     type:'POST', 
                     data:{
-                        status:$('#share-modal').find('textarea').val(),
+                        status:encodeURIComponent($('#share-modal').find('textarea').val()+' \n https://strengthdefinesus.com'),
                         url:session.url,
                         type:session.type
                     }
@@ -384,7 +385,7 @@ $(document).ready(function(){
                 if(session.type == 'video' || session.url.indexOf('.gif') != -1) {
                     FB.api('/me/videos', 'post', {
                         file_url:session.aws,
-                        description:$('#share-modal').find('textarea').val(),
+                        description:$('#share-modal').find('textarea').val()+' \n https://strengthdefinesus.com',
                         title:'Strength Defines Us #strongermovie',
                     }, function(res, err){
                         console.log(res, err)
@@ -404,7 +405,7 @@ $(document).ready(function(){
                     })
                 }else if(session.type=='image' && session.url.indexOf('.gif') == -1){
                      FB.api('/me/photos', 'post', {
-                        caption:$('#share-modal').find('textarea').val(),
+                        caption:$('#share-modal').find('textarea').val()+' \n https://strengthdefinesus.com',
                         url:session.aws
                     }, function(res,err){
                         $('.share-spinner').hide();
